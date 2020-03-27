@@ -1,0 +1,136 @@
+#首先我们要倒入包
+import pandas as pd
+import numpy as np
+import cmath
+import math
+import random
+import matplotlib.pyplot as plt
+
+#其次我们要给常量赋值，以及定义数组
+s0=100
+k=100
+R=0.03
+T=1
+N=100
+M=10000
+sigma=0.3
+#定义一个二维数组，其行的个数为M,但是列的长度是需要我们动态增添的
+path=[[]for i in range(M)]
+#第一趟循环，是要给所有M行的第一列的数赋值
+for i in range(M):
+    path[i].append(random.normalvariate(0,1)*cmath.sqrt(T/N)*sigma*s0+T/N*R*s0+s0)
+#第二趟循环，那就是要给剩下的N-1列赋值，需要两层循环：
+for i in range(N-1):          #第一层确定列的标号
+    for j in range(M):        #第二层确定行的运算，不过
+        path[j].append(random.normalvariate(0,1)*cmath.sqrt(T/N)*sigma*path[j][i]+T/N*R*path[j][i]+path[j][i])
+#接下来我们计算payoff
+payoff=[]           #定义一个数组储存payoff的值
+for i in range(M):
+    payoff.append(path[i][N-1]-k)
+    temp=payoff[i].real
+    payoff[i]=max(0,temp)
+payoff2=np.mean(payoff)
+payoff2
+c=math.exp(-1*R*T)*payoff2
+c
+
+##接下来是一些其他的作图观察
+plt.plot(path[round(random.random()*M-1)])  #随机取一个个体（0~M-1），观察其path演化的过程
+plt.plot(payoff)                         #观察M个个体的payoff情况
+
+#(1)亚式看涨期权：以均价计算payoff
+#其次我们要给常量赋值，以及定义数组
+s0=100
+k=100
+R=0.03
+T=1
+N=100
+M=10000
+sigma=0.3
+#定义一个二维数组，其行的个数为M,但是列的长度是需要我们动态增添的
+path=[[]for i in range(M)]
+#第一趟循环，是要给所有M行的第一列的数赋值
+for i in range(M):
+    path[i].append(random.normalvariate(0,1)*cmath.sqrt(T/N)*sigma*s0+T/N*R*s0+s0)
+#第二趟循环，那就是要给剩下的N-1列赋值，需要两层循环：
+for i in range(N-1):          #第一层确定列的标号
+    for j in range(M):        #第二层确定行的运算，不过
+        path[j].append(random.normalvariate(0,1)*cmath.sqrt(T/N)*sigma*path[j][i]+T/N*R*path[j][i]+path[j][i])
+#接下来我们计算payoff
+payoff=[]           #定义一个数组储存payoff的值
+for i in range(M):
+    payoff.append(np.mean(path[i])-k)
+    temp=payoff[i].real
+    payoff[i]=max(0,temp)
+payoff2=np.mean(payoff)
+payoff2
+c1=math.exp(-1*R*T)*payoff2
+c1
+
+#(2)回望看涨期权：以均价计算payoff
+#其次我们要给常量赋值，以及定义数组
+s0=100
+k=100
+R=0.03
+T=1
+N=100
+M=10000
+sigma=0.3
+#定义一个二维数组，其行的个数为M,但是列的长度是需要我们动态增添的
+path=[[]for i in range(M)]
+#第一趟循环，是要给所有M行的第一列的数赋值
+for i in range(M):
+    path[i].append(random.normalvariate(0,1)*cmath.sqrt(T/N)*sigma*s0+T/N*R*s0+s0)
+#第二趟循环，那就是要给剩下的N-1列赋值，需要两层循环：
+for i in range(N-1):          #第一层确定列的标号
+    for j in range(M):        #第二层确定行的运算，不过
+        path[j].append(random.normalvariate(0,1)*cmath.sqrt(T/N)*sigma*path[j][i]+T/N*R*path[j][i]+path[j][i])
+#接下来我们计算payoff
+payoff=[]           #定义一个数组储存payoff的值
+for i in range(M):
+    payoff.append(np.max(path[i])-k)
+    temp=payoff[i].real
+    payoff[i]=max(0,temp)
+payoff2=np.mean(payoff)
+payoff2
+c2=math.exp(-1*R*T)*payoff2
+c2
+
+#(3)敲出看涨期权：
+#其次我们要给常量赋值，以及定义数组
+s0=100
+k=100
+R=0.03
+T=1
+N=100
+M=10000
+sigma=0.3
+#定义一个二维数组，其行的个数为M,但是列的长度是需要我们动态增添的
+path=[[]for i in range(M)]
+#第一趟循环，是要给所有M行的第一列的数赋值
+for i in range(M):
+    path[i].append(random.normalvariate(0,1)*cmath.sqrt(T/N)*sigma*s0+T/N*R*s0+s0)
+#第二趟循环，那就是要给剩下的N-1列赋值，需要两层循环：
+for i in range(N-1):          #第一层确定列的标号
+    for j in range(M):        #第二层确定行的运算，不过
+        path[j].append(random.normalvariate(0,1)*cmath.sqrt(T/N)*sigma*path[j][i]+T/N*R*path[j][i]+path[j][i])
+#接下来我们计算payoff
+payoff=[]           #定义一个数组储存payoff的值
+for i in range(M):
+    count=0   #count用来计数，若一个路径所有的数都大于等于80那么这个路径上大于等于80的数的个数应该等于N,否则只要有小于80的，其和小于N
+    for j in range(N):
+        if path[i][j].real>=80:
+            count=count+1
+    if count==N:
+        payoff.append(path[i][N-1]-k)
+    else:
+        payoff.append(0)
+for i in range(M):
+    temp=payoff[i].real
+    payoff[i]=max(0,temp)
+payoff3=np.mean(payoff)
+payoff3
+c3=math.exp(-1*R*T)*payoff2
+c3
+
+
